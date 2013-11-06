@@ -1,19 +1,14 @@
-starting_json_block = {
-  oven: [{id: 1, type: "peanut butter", timeCooked: 12, bakeTime: 10}, {id: 2, type: "chocolate chip", timeCooked: 2, bakeTime: 12}],
-  prepTable: [{id: 2, type: "chocolate chip", timeCooked: 5, bakeTime: 12}, {id: 3, type: "toffee", timeCooked: 2, bakeTime: 12}]
-};
-
 renderPage = function(json) {
   var counter = 0;
   $.each(json.oven, function() {
-    var cookie = new Cookie(this.type, this.bakeTime, this.timeCooked);
+    var cookie = new Cookie(this.cookie_type, parseInt(this.bakeTime), parseInt(this.timeCooked));
     oven.racks.push(cookie);
     $('#rack_'+counter).text(cookie.type + " " + cookie.status()).addClass(cookie.status());
     counter++;
     console.log(cookie);
   });
-  $.each(json.prepTable, function() {
-    var cookie = new Cookie(this.type, this.bakeTime, this.timeCooked);
+  $.each(json.table, function() {
+    var cookie = new Cookie(this.cookie_type, parseInt(this.bakeTime), parseInt(this.timeCooked));
     table.queue.push(cookie);
     var node = "<li>"+cookie.type+"<button class='add_to_oven'>Add to oven</button></li>";
     $('#prep_batches').append(node);
@@ -120,7 +115,7 @@ $(document).ready(function() {
    // starting_json_block = ajax request to get starting_json_block
    $.get('/getjson', function(response) {
      renderPage(response);
-   });
+   }, 'json');
 
   $('#new_batch').on('submit', function(event) {
     event.preventDefault();
@@ -146,7 +141,6 @@ $(document).ready(function() {
   $("#save_button").on('submit', function(event){
     event.preventDefault();
     var data = makeJson();
-    console.log($(data).serialize());
     $.post('/save', data, function(response) {
       console.log(response);
     }, 'json');

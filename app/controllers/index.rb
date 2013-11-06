@@ -3,14 +3,12 @@ get '/' do
 end
 
 post '/save' do
-  p params
-  Cookie.create_from_json(json_object: params)
+  # p params
+  Cookie.create_from_json(params)
 end
 
 get '/getjson' do
-
-  if Cookie.last
-    Cookie.last.json_object.to_json
-  end
-  {'type' => @cookie.type, 'time' => @cookie.time}.to_json
+  @oven = Oven.last
+  @table = Table.last
+  {oven: @oven.cookies, table: @table.cookies}.to_json
 end
